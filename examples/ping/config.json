@@ -1,0 +1,115 @@
+{
+    "defaults": {
+        "contexts": {
+            "default": "default",
+            "error": "error"
+        },
+        "render": {
+            "properties": {}
+        }
+    },
+    "helpers": {
+        "context": {
+            "name": "Colore.Providers.InMemory.SimpleContextProvider",
+            "args": {
+                "contexts": {
+                    "/api/joke/random": {
+                        "properties": {},
+                        "logic": [
+                            {
+                                "class": "Colore.Examples.Ping.JokeExample",
+                                "method": "randomJoke"
+                            }
+                        ],
+                        "render": {
+                            "engine": "Colore.Renderers.HTTP.JSON.DataRenderer",
+                            "path": "",
+                            "properties": {
+                                "joke": "I'd tell you a UDP joke, but you wouldn't get."
+                            }
+                        }
+                    },
+                    "/api/joke": {
+                        "properties": {},
+                        "logic": [
+                            {
+                                "class": "Colore.Examples.Ping.JokeExample",
+                                "method": "getJoke"
+                            }
+                        ],
+                        "render": {
+                            "engine": "Colore.Renderers.HTTP.JSON.DataRenderer",
+                            "path": "",
+                            "properties": {
+                                "joke": "I'd tell you a UDP joke, but you wouldn't get."
+                            }
+                        }
+                    },
+                    "/api/ping": {
+                        "properties": {},
+                        "logic": [
+                            {
+                                "class": "Colore.Examples.Ping.PingExample",
+                                "method": "reply"
+                            }
+                        ],
+                        "render": {
+                            "engine": "Colore.Renderers.HTTP.JSON.DataRenderer",
+                            "path": "",
+                            "properties": {
+                                "message": "Default context render property."
+                            }
+                        }
+                    },
+                    "/api/trunk": {
+                        "properties": {},
+                        "logic": [
+                            {
+                                "class": "Colore.Examples.Ping.JokeExample",
+                                "method": "randomJoke"
+                            },
+                            {
+                                "class": "Colore.Examples.Ping.PingExample",
+                                "method": "reply"
+                            }
+                        ],
+                        "render": {
+                            "engine": "Colore.Renderers.HTTP.JSON.DataRenderer",
+                            "path": "",
+                            "properties": {}
+                        }
+                    },
+                    "default": {
+                        "properties": {},
+                        "logic": [],
+                        "render": {
+                            "engine": "Colore.Renderers.HTTP.SimpleTemplateRenderer",
+                            "arguments": {
+                                "path": "templates/default.ejs"
+                            },
+                            "properties": {
+                                "page_title": "Example",
+                                "place_holder_message": "Welcome to the Colore example page!"
+                            }
+                        }
+                    },
+                    "error": {
+                        "properties": {},
+                        "logic": [],
+                        "render": {
+                            "engine": "Colore.Renderers.HTTP.SimpleTemplateRenderer",
+                            "arguments": {
+                                "path": "templates/error.ejs"
+                            },
+                            "properties": {
+                                "page_title": "Error",
+                                "error_message": "Sorry, we didn't find the page you requested!"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "request": "Colore.Adapters.Default.RequestAdapter"
+    }
+}

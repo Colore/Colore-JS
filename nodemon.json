@@ -1,0 +1,11 @@
+{
+    "restartable": "rs",
+    "ignore": [".git", "node_modules/**/node_modules"],
+    "verbose": true,
+    "exec": "node_modules/.bin/ts-node examples/ping/colore.ts",
+    "watch": ["examples/", "src/"],
+    "env": {
+        "NODE_ENV": "development"
+    },
+    "ext": "ts"
+}
