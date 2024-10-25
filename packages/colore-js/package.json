@@ -34,6 +34,9 @@
         "require": "./dist/index.cjs",
         "types": "./dist/index.d.ts"
     },
+    "files": [
+        "./dist"
+    ],
     "keywords": [],
     "license": "ISC",
     "name": "@colore/colore-js",
