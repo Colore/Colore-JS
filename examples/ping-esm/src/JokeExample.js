@@ -3,7 +3,7 @@
  * @use Colore\Interfaces\Adapters\IRequestAdapter
  */
 
-const { Logger } = require('@colore/colore-js')
+import { Logger } from '@colore/colore-js'
 
 /**
  * The JokeExample class is an example class for remote calls.
