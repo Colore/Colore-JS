@@ -10,7 +10,7 @@ import { Logger, type IRequestAdapter } from '@colore/colore-js'
  */
 export class JokeExample {
     private readonly jokes = [
-        'A programmer was found death in the shower. The instructions read: lather, rise, repeat',
+        'A programmer was found dead in the shower. The instructions read: lather, rise, repeat',
         "!false - it's funny because it's true!",
         "Why did the programmer quit his job? Because he couldn't get arrays...",
         'A programmer\'s wife tells him "go to the store and get a gallon of milk,' + ' and if they have eggs, get a dozen". He returns with 13 gallons of milk',
