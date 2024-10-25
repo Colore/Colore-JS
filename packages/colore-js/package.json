@@ -45,6 +45,7 @@
         "build": "wireit",
         "build:src": "wireit",
         "build:types": "wireit",
+        "prepublishOnly": "pnpm run build",
         "type-check": "wireit"
     },
     "type": "module",
