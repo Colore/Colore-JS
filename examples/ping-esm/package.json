@@ -1,0 +1,24 @@
+{
+    "author": "Ty Eggen",
+    "dependencies": {
+        "@colore/colore-js": "workspace:*"
+    },
+    "description": "",
+    "devDependencies": {
+        "eslint": "^8.52.0",
+        "eslint-config-prettier": "^9.0.0",
+        "eslint-plugin-import": "^2.29.0",
+        "eslint-plugin-n": "^16.2.0",
+        "eslint-plugin-promise": "^6.1.1"
+    },
+    "keywords": [],
+    "license": "ISC",
+    "main": "colore.js",
+    "name": "@colore/example-ping-esm",
+    "private": true,
+    "scripts": {
+        "example": "node colore.js"
+    },
+    "type": "module",
+    "version": "1.0.0"
+}

@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "composite": true,
+        "target": "ES2020", // which level of JS support to target
+        "module": "CommonJS", // which system for the program AMD, UMD, System, CommonJS
+        // Recommended: Compiler complains about expressions implicitly typed as 'any'
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "esModuleInterop": true
+    },
+    "include": ["**/tsup.config.ts"],
+    "exclude": ["**/node_modules"]
+}

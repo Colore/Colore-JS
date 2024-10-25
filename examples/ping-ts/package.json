@@ -1,0 +1,20 @@
+{
+    "author": "Ty Eggen",
+    "dependencies": {
+        "@colore/colore-js": "workspace:*"
+    },
+    "description": "",
+    "devDependencies": {
+        "tsx": "^4.19.1"
+    },
+    "keywords": [],
+    "license": "ISC",
+    "main": "colore.ts",
+    "name": "@colore/example-ping-ts",
+    "private": true,
+    "scripts": {
+        "example": "tsx colore.ts"
+    },
+    "type": "module",
+    "version": "1.0.0"
+}

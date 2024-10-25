@@ -1,12 +1,15 @@
 *
 
+!.gitignore
+!.dockerignore
+
 !examples
 !examples/**/
 !examples/**/*
 
-!src
-!src/**/
-!src/**/*
+!packages/
+!packages/**/
+!packages/**/*
 
 !.editorconfig
 !.eslintrc.yml
@@ -16,17 +19,11 @@
 !docker-ping-example.sh
 
 !package.json
-!package-lock.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
 
 !nodemon.json
 !tsconfig.json
+!tsconfig.*.json
 
 !README.md
-
-src/ConfigStore.ts
-src/Renderers/Buffered/SimpleTemplateRenderer.ts
-src/Renderers/HTTP/RedirectRenderer.ts
-src/Utils/FileMonitor.ts
-src/Constants.ts
-src/Providers/JSON/ContextProvider.ts
-src/Providers/InMemory/RouteContextProvider.ts

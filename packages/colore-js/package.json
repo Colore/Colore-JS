@@ -1,5 +1,5 @@
 {
-    "author": "",
+    "author": "Ty Eggen",
     "dependencies": {
         "deepmerge": "^4.3.1",
         "sprintf": "^0.1.5",
@@ -22,7 +22,6 @@
         "eslint-plugin-promise": "^6.1.1",
         "git-cz": "^4.9.0",
         "prettier": "^3.0.3",
-        "standard": "^17.1.2",
         "ts-auto-guard": "^4.1.4",
         "ts-node": "^10.9.1",
         "tsup": "^8.3.0",
@@ -30,53 +29,60 @@
         "uuid": "^9.0.1",
         "wireit": "^0.14.9"
     },
-    "directories": {
-        "example": "examples"
+    "exports": {
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.cjs",
+        "types": "./dist/index.d.ts"
     },
     "keywords": [],
     "license": "ISC",
-    "name": "colore-js",
+    "name": "@colore/colore-js",
     "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228",
-    "private": true,
     "scripts": {
         "build": "wireit",
-        "example:ping-cjs": "wireit",
-        "example:ping-esm": "wireit",
-        "example:ping-ts": "wireit"
+        "build:src": "wireit",
+        "build:types": "wireit",
+        "type-check": "wireit"
     },
+    "type": "module",
+    "types": "dist/index.d.ts",
     "version": "1.0.0",
     "wireit": {
-        "build": {
+        "build:src": {
+            "clean": true,
+            "command": "tsup --format cjs,esm --outDir dist",
             "dependencies": [
-                "./packages/colore-js:build"
+                "type-check"
+            ],
+            "files": [
+                "src/**/*.ts"
+            ],
+            "output": [
+                "dist/**/*"
             ]
         },
-        "example:ping-cjs": {
-            "command": "pnpm --filter @colore/example-ping-cjs run example",
+        "build:types": {
+            "clean": true,
+            "command": "tsup src/index.ts --format esm --outDir dist --dts-only ",
             "dependencies": [
-                "build"
+                "type-check"
             ],
-            "env": {
-                "WIREIT_LOGGER": "simple"
-            }
+            "files": [
+                "src/index.ts"
+            ],
+            "output": [
+                "dist/index.ts"
+            ]
         },
-        "example:ping-esm": {
-            "command": "pnpm --filter @colore/example-ping-esm run example",
+        "build": {
             "dependencies": [
-                "build"
-            ],
-            "env": {
-                "WIREIT_LOGGER": "simple"
-            }
+                "type-check",
+                "build:src",
+                "build:types"
+            ]
         },
-        "example:ping-ts": {
-            "command": "pnpm --filter @colore/example-ping-ts run example",
-            "dependencies": [
-                "build"
-            ],
-            "env": {
-                "WIREIT_LOGGER": "simple"
-            }
+        "type-check": {
+            "command": "tsc --noEmit"
         }
     }
 }
