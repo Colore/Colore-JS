@@ -4,7 +4,6 @@ import { createServer } from 'http'
 import path from 'node:path'
 import { fileURLToPath } from 'url'
 
-// @ts-expect-error
 const getFilename = () => fileURLToPath(import.meta.url)
 const __filename = getFilename()
 const __dirname = path.dirname(__filename)
