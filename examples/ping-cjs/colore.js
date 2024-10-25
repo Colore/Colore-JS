@@ -3,8 +3,6 @@ const { readFileSync } = require('fs')
 const { createServer } = require('http')
 const path = require('node:path')
 
-// ClassLoader.addBasePath('Colore', path.resolve(path.join(__dirname, '../../src')))
-// ClassLoader.addBasePath('Colore', 'self')
 ClassLoader.addBasePath('Colore.Examples.Ping', path.resolve(path.join(__dirname, 'src')))
 
 Logger.setLogLevel(LOG_TRACE)

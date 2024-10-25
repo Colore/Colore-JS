@@ -8,8 +8,6 @@ const getFilename = () => fileURLToPath(import.meta.url)
 const __filename = getFilename()
 const __dirname = path.dirname(__filename)
 
-// ClassLoader.addBasePath('Colore', path.resolve(path.join(__dirname, '../../src')))
-// ClassLoader.addBasePath('Colore', 'self')
 ClassLoader.addBasePath('Colore.Examples.Ping', path.resolve(path.join(__dirname, 'src')))
 
 Logger.setLogLevel(LOG_TRACE)
