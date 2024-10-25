@@ -2,8 +2,9 @@
     "author": "Ty Eggen",
     "dependencies": {
         "deepmerge": "^4.3.1",
+        "ejs": "^3.1.9",
         "sprintf": "^0.1.5",
-        "undici-types": "^5.26.5"
+        "uuid": "^9.0.1"
     },
     "description": "",
     "devDependencies": {
@@ -13,7 +14,6 @@
         "@types/uuid": "^9.0.6",
         "@typescript-eslint/eslint-plugin": "^6.9.0",
         "@typescript-eslint/parser": "^6.9.0",
-        "ejs": "^3.1.9",
         "eslint": "^8.52.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-config-standard-with-typescript": "^39.1.1",
@@ -26,7 +26,6 @@
         "ts-node": "^10.9.1",
         "tsup": "^8.3.0",
         "typescript": "^5.2.2",
-        "uuid": "^9.0.1",
         "wireit": "^0.14.9"
     },
     "exports": {

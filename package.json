@@ -1,10 +1,5 @@
 {
     "author": "",
-    "dependencies": {
-        "deepmerge": "^4.3.1",
-        "sprintf": "^0.1.5",
-        "undici-types": "^5.26.5"
-    },
     "description": "",
     "devDependencies": {
         "@types/ejs": "^3.1.5",
