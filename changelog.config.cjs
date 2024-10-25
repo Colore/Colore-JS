@@ -1,3 +1,5 @@
+const scopes = ['', 'all', 'examples', 'implementation']
+
 const types = {
     hotfix: {
         description: 'Hotfix',
@@ -102,7 +104,8 @@ module.exports = {
     list: Object.keys(types),
     maxMessageLength: 80,
     minMessageLength: 3,
-    questions: ['type', 'subject', 'body', 'breaking', 'issues'],
+    questions: ['scope', 'type', 'subject', 'body', 'breaking', 'issues'],
+    scopes,
     types,
     messages: {
         type: "Select the type of change that you're committing:",
