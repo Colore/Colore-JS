@@ -5,11 +5,10 @@
     },
     "description": "",
     "devDependencies": {
-        "eslint": "^8.52.0",
-        "eslint-config-prettier": "^9.0.0",
-        "eslint-plugin-import": "^2.29.0",
-        "eslint-plugin-n": "^16.2.0",
-        "eslint-plugin-promise": "^6.1.1"
+        "@tyisi/config-eslint": "^1.0.0",
+        "@tyisi/config-prettier": "^1.0.0",
+        "eslint": "^9.13.0",
+        "prettier": "^3.3.3"
     },
     "keywords": [],
     "license": "ISC",
@@ -17,6 +16,7 @@
     "name": "@colore/example-ping-cjs",
     "private": true,
     "scripts": {
+        "commit": "pnpm dlx git-cz@latest --scope=examples",
         "example": "node colore.js"
     },
     "type": "commonjs",
