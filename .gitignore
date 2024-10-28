@@ -13,8 +13,10 @@
 
 !.editorconfig
 !.eslintrc.yml
+!.gitattributes
 !.prettierrc.yml
 !changelog.config.cjs
+!eslint.config.mjs
 
 !docker-ping-example.sh
 
