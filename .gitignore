@@ -11,6 +11,13 @@
 !packages/**/
 !packages/**/*
 
+!.changeset/
+!.changeset/*
+
+!.github/
+!.github/**/
+!.github/**/*
+
 !.editorconfig
 !.eslintrc.yml
 !.gitattributes
