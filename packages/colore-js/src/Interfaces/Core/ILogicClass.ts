@@ -1,5 +1,5 @@
-import { type IRequestAdapter } from '../Adapters/IRequestAdapter'
+import type { ILogicCall } from './ILogicCall.js'
 
-export interface ILogicClass extends Record<string, (cro: IRequestAdapter) => void> {
+export interface ILogicClass extends ILogicCall {
     constructor: () => ILogicClass
 }

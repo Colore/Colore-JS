@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { Logger } from '../../Logger'
+import { Logger } from '../../Logger.js'
 
 interface SessionStore {
     data: Record<string, unknown>
@@ -8,6 +8,11 @@ interface SessionStore {
 
 type SessionsStore = Record<string, SessionStore>
 
+/**
+ * Simple session provider
+ *
+ * @public
+ */
 export class SimpleSessionProvider {
     protected static gcInterval = 900
     protected static gcLastRun = 0
@@ -19,10 +24,10 @@ export class SimpleSessionProvider {
     private constructor(sessionId?: string) {
         sessionId = sessionId ?? uuidv4()
 
-        if (SimpleSessionProvider.sessions[sessionId] == null) {
+        if (!Object.keys(SimpleSessionProvider.sessions).includes(sessionId)) {
             SimpleSessionProvider.sessions[sessionId] = {
                 data: {},
-                expiry: SimpleSessionProvider.gcInterval + Date.now(),
+                expiry: SimpleSessionProvider.gcInterval + Date.now()
             }
         }
 

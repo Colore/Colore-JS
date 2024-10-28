@@ -1,11 +1,11 @@
-import { type IRequestAdapter } from '../../../Interfaces/Adapters/IRequestAdapter'
-import { type IRenderProvider } from '../../../Interfaces/Providers/IRenderProvider'
-import { Logger } from '../../../Logger'
+import type { IRequestAdapter } from '../../../Interfaces/Adapters/IRequestAdapter.js'
+import type { IRenderProvider } from '../../../Interfaces/Providers/IRenderProvider.js'
+import { Logger } from '../../../Logger.js'
 
 export class DataRenderer implements IRenderProvider {
     /**
-     * @param IRequestAdapter
-     * @return void
+     * @param IRequestAdapter - The request adapter
+     * @returns void
      */
     public dispatch(cro: IRequestAdapter): void {
         const outputProperties: Record<string, unknown> = {}

@@ -1,19 +1,20 @@
+import type { IRequestAdapter } from './Interfaces/Adapters/IRequestAdapter.js'
+import type { IAdapterContext } from './Interfaces/Core/IAdapterContext.js'
+import type { ILogicSet, ILogic } from './Interfaces/Core/ILogic.js'
+import type { ILogicDone } from './Interfaces/Core/ILogicDone.js'
+import type { ILogicError } from './Interfaces/Core/ILogicError.js'
+import { Logger } from './Logger.js'
+import { AdapterContext } from './Models/AdapterContext.js'
+
 /**
- * @namespace Colore
+ * Abstract generic request adapter
  *
- * @use Colore\Interfaces\Adapters\IRequestAdapter
+ * @public
  */
-
-import { type IRequestAdapter } from './Interfaces/Adapters/IRequestAdapter'
-import { type IAdapterContext } from './Interfaces/Core/IAdapterContext'
-import { type ILogic, type ILogicSet } from './Interfaces/Core/ILogic'
-import { Logger } from './Logger'
-import { AdapterContext } from './Models/AdapterContext'
-
 export abstract class GenericRequestAdapter implements IRequestAdapter {
-    protected contextKey: string = ''
+    protected contextKey = ''
     protected context: AdapterContext = new AdapterContext()
-    protected exceptionState: boolean = false
+    protected exceptionState = false
     protected requestVariables: Record<string, unknown> = {}
     protected renderProperties: Record<string, unknown> = {}
     protected requestArguments: Record<string, unknown> = {}
@@ -23,16 +24,16 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Get the key of the current context
      *
-     * @return Returns the current context key
+     * @returns Returns the current context key
      */
     getRequestContext(): string {
         return this.contextKey
     }
 
     /**
-     * @param array contextData
+     * @param array - contextData
      *
-     * @return void
+     * @returns void
      */
     loadContext(contextData: IAdapterContext): void {
         // Save context key
@@ -41,20 +42,18 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
         // Load context information
         this.context.hydrate(contextData)
 
-        if (this.context.arguments != null) {
+        if ('arguments' in this.context && typeof this.context.arguments !== 'undefined') {
             this.requestArguments = this.context.arguments
         }
 
-        if (this.context.render?.arguments == null) {
-            this.context.render = {
-                ...this.context.render,
-                arguments: {},
-            }
+        if (!('arguments' in this.context.render)) {
+            // @ts-expect-error never
+            this.context.render.arguments = {}
         }
 
         this.exceptionState = false
 
-        if (this.context.render.properties != null && typeof this.context.render.properties === 'object' && Object.keys(this.context.render.properties).length > 0) {
+        if ('properties' in this.context.render && typeof this.context.render.properties === 'object' && Object.keys(this.context.render.properties).length > 0) {
             Logger.debug('We have render arguments')
 
             for (const renderProperty in this.context.render.properties) {
@@ -81,7 +80,7 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Set the request in an exception state
      *
-     * @return void
+     * @returns void
      */
     doException(): void {
         this.exceptionState = true
@@ -90,10 +89,10 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Get all the logic for the request.
      *
-     * @return array Returns an array
+     * @returns array Returns an array
      */
     getLogic(): ILogicSet {
-        if (this.context.logic == null || !Array.isArray(this.context.logic)) {
+        if (!('logic' in this.context) || !Array.isArray(this.context.logic)) {
             return []
         }
 
@@ -103,11 +102,11 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Gets the next Logic element from the stack.
      *
-     * @return mixed Logic element
+     * @returns mixed Logic element
      */
-    getNextLogic(): ILogic | false {
+    getNextLogic(): ILogic | ILogicDone | ILogicError {
         // If we have a non-empty preempt_logic list, merge it into the logic list
-        if (this.context.preempt_logic != null && this.context.preempt_logic.length > 0) {
+        if ('preempt_logic' in this.context && this.context.preempt_logic.length > 0) {
             while (this.context.preempt_logic.length > 0) {
                 const nextPreemptLogic = this.context.preempt_logic.pop()
                 if (nextPreemptLogic != null) this.context.logic.unshift(nextPreemptLogic)
@@ -116,26 +115,26 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
         // Return the next logic call from the stack
         if (this.context.logic.length > 0) {
-            return this.context.logic.shift() ?? false
+            return this.context.logic.shift() ?? { result: 'DONE' }
         }
 
-        return false
+        return { result: 'ERROR' }
     }
 
     /** Check if there is logic
      *
-     * @return boolean
+     * @returns boolean
      */
     hasLogic(): boolean {
-        return this.context.logic != null && Array.isArray(this.context.logic)
+        return 'logic' in this.context && Array.isArray(this.context.logic)
     }
 
     /**
      * Append logic to the worklist
      *
-     * @param array Logic
+     * @param array - Logic
      *
-     * @return void
+     * @returns void
      */
     appendLogic(logic: ILogic | ILogicSet): void {
         if (Array.isArray(logic)) {
@@ -148,20 +147,18 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Insert logic to the worklist
      *
-     * @param array Logic
+     * @param array - Logic
      *
-     * @return void
+     * @returns void
      */
     insertLogic(logic: ILogic | ILogicSet): void {
         // Check for preempt list
-        if (this.context.preempt_logic == null) {
-            this.context.preempt_logic = []
-        }
+        this.context.preempt_logic = 'preempt_logic' in this.context ? this.context.preempt_logic : []
 
         // Add logic to preempt list
-        if (Array.isArray(logic) && logic.every((l) => l.class != null && l.method != null)) {
+        if (Array.isArray(logic) && logic.every((l) => typeof l === 'object' && 'class' in l && 'method' in l)) {
             this.context.preempt_logic = [...this.context.preempt_logic, ...logic]
-        } else if (!Array.isArray(logic) && logic.class != null && logic.method != null) {
+        } else if (!Array.isArray(logic) && typeof logic === 'object' && 'class' in logic && 'method' in logic) {
             this.context.preempt_logic.push(logic)
         }
     }
@@ -169,9 +166,9 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Magic overload getter. Returns the requestVariable value or null.
      *
-     * @param string requestVariable
+     * @param string - requestVariable
      *
-     * @return mixed
+     * @returns mixed
      */
     __get(requestVariable: string): unknown {
         if (this.requestVariables[requestVariable] != null) {
@@ -184,19 +181,19 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Magic overload setter
      *
-     * @param string requestVariable
-     * @param string requestValue
+     * @param string - requestVariable
+     * @param string - requestValue
      *
-     * @return void
+     * @returns void
      */
-    __set(requestVariable: string, requestValue: string): void {
+    __set(requestVariable: string, requestValue: unknown): void {
         this.requestVariables[requestVariable] = requestValue
     }
 
     /**
      * Magic overload checker to determine if the variable is set.
-     * @param unknown requestVariable
-     * @return boolean
+     * @param unknown - requestVariable
+     * @returns boolean
      */
     __isset(requestVariable: string): boolean {
         return this.requestVariables[requestVariable] != null
@@ -204,7 +201,7 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
     /**
      * Magical unsetter for request variables.
-     * @param unknown requestVariable
+     * @param unknown - requestVariable
      */
     __unset(requestVariable: string): void {
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
@@ -214,7 +211,7 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Get the render arguments. These are settings for the renderer.
      *
-     * @return mixed
+     * @returns mixed
      */
     getRenderArguments(): Record<string, unknown> {
         return this.context.render.arguments
@@ -223,24 +220,20 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Get a specific render argument.
      *
-     * @param string renderArgumentName
+     * @param string - renderArgumentName
      *
-     * @return mixed
+     * @returns mixed
      */
     getRenderArgument(renderArgumentName: string): unknown {
-        if (this.context.render.arguments[renderArgumentName] != null) {
-            return this.context.render.arguments[renderArgumentName]
-        }
-
-        return null
+        return this.context.render.arguments[renderArgumentName]
     }
 
     /**
      * Set the render arguments. These are settings for the renderer.
      *
-     * @param string renderPath
+     * @param string - renderPath
      *
-     * @return void
+     * @returns void
      */
     setRenderArgument(renderArgumentName: string, renderArgumentValue: unknown): void {
         this.context.render.arguments[renderArgumentName] = renderArgumentValue
@@ -249,7 +242,7 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Get the context's rendering properties.
      *
-     * @return object Returns an array with all the rendering properties.
+     * @returns object Returns an array with all the rendering properties.
      */
     getContextRenderProperties(): Record<string, unknown> {
         return this.context.render.properties
@@ -257,7 +250,7 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
     /**
      * Gets an array containing all of the rendering properties.
-     * @return array
+     * @returns array
      */
     getRenderProperties(): Record<string, unknown> {
         return this.renderProperties
@@ -265,24 +258,20 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
     /**
      * Get a (named) render property. Returns null or the render property if it exists.
-     * @param string renderProperty
-     * @return multitype:|NULL
+     * @param string - renderProperty
+     * @returns multitype:|NULL
      */
     getRenderProperty(renderProperty: string): unknown {
-        if (this.renderProperties[renderProperty] != null) {
-            return this.renderProperties[renderProperty]
-        }
-
-        return null
+        return this.renderProperties[renderProperty]
     }
 
     /**
      * Set a render property
      *
-     * @param string renderProperty
-     * @param mixed renderValue
+     * @param string - renderProperty
+     * @param mixed - renderValue
      *
-     * @return void
+     * @returns void
      */
     setRenderProperty(renderProperty: string, renderValue: unknown): void {
         Logger.debug('Set [%s] to [%s]', renderProperty, renderValue)
@@ -293,7 +282,7 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Get the rendering engine for the current request.
      *
-     * @return string Returns a string with the currently set rendering engine.
+     * @returns string Returns a string with the currently set rendering engine.
      */
     getRenderEngine(): string {
         return this.context.render.engine
@@ -301,7 +290,7 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
     /**
      * Set the rendering engine for the current request.
-     * @param string renderEngine
+     * @param string - renderEngine
      */
     setRenderEngine(renderEngine: string): void {
         this.context.render.engine = renderEngine
@@ -309,19 +298,15 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
     /**
      * Get rendering path.
-     * @return string Returns the render path if set, else returns false.
+     * @returns string Returns the render path if set, else returns false.
      */
     getRenderPath(): string | false {
-        if (this.context.render.arguments.path != null) {
-            return this.context.render.arguments.path as string
-        }
-
-        return false
+        return this.context.render.arguments.path as string
     }
 
     /**
      * Sets the render path
-     * @param string renderPath
+     * @param string - renderPath
      */
     setRenderPath(renderPath: string): void {
         this.context.render.arguments.path = renderPath
@@ -330,13 +315,13 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Output
      *
-     * @param mixed Output variable
+     * @param mixed - Output variable
      */
     abstract output(content: unknown, metadata: Record<string, string>, status: number): unknown
 
     /**
      * Returns an array containing all of the request arguments.
-     * @return array
+     * @returns array
      */
     getRequestArguments(): Record<string, unknown> {
         return this.requestArguments
@@ -344,24 +329,20 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
     /**
      * Get a specific request argument. Returns null if the specified request argument does not exist.
-     * @param string requestArgumentName
-     * @return multitype:|NULL
+     * @param string - requestArgumentName
+     * @returns multitype:|NULL
      */
     getRequestArgument(requestArgumentName: string): unknown {
-        if (this.requestArguments[requestArgumentName] != null) {
-            return this.requestArguments[requestArgumentName]
-        }
-
-        return null
+        return this.requestArguments[requestArgumentName]
     }
 
     /**
      * Sets a request argument.
      *
-     * @param string requestArgument
-     * @param mixed requestArgumentValue
+     * @param string - requestArgument
+     * @param mixed - requestArgumentValue
      *
-     * @return void
+     * @returns void
      */
     setRequestArgument(requestArgument: string, requestArgumentValue: unknown): void {
         this.requestArguments[requestArgument] = requestArgumentValue
@@ -369,7 +350,7 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
     /**
      * Returns an array containing all of the request properties.
-     * @return array
+     * @returns array
      */
     getRequestProperties(): Record<string, unknown> {
         return this.requestProperties
@@ -378,9 +359,9 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Get a specific request property. Returns null if the specified request property does not exist.
      *
-     * @param string requestProperty
+     * @param string - requestProperty
      *
-     * @return multitype:|NULL
+     * @returns multitype:|NULL
      */
     getRequestProperty(requestProperty: string): unknown {
         if (this.requestProperties[requestProperty] != null) {
@@ -393,10 +374,10 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Sets a request property.
      *
-     * @param string requestProperty
-     * @param string requestValue
+     * @param string - requestProperty
+     * @param string - requestValue
      *
-     * @return void
+     * @returns void
      */
     setRequestProperty(requestProperty: string, requestValue: unknown): void {
         this.requestProperties[requestProperty] = requestValue
@@ -404,7 +385,7 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
     /**
      * Returns an array containing all of the session properties.
-     * @return array
+     * @returns array
      */
     getSessionProperties(): Record<string, unknown> {
         return this.sessionProperties
@@ -412,15 +393,11 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
 
     /**
      * Get a (named) session property. Returns null or the session property if it exists.
-     * @param unknown sessionProperty
-     * @return multitype:|NULL
+     * @param unknown - sessionProperty
+     * @returns multitype:|NULL
      */
     getSessionProperty(sessionProperty: string): unknown {
-        if (this.sessionProperties[sessionProperty] != null) {
-            return this.sessionProperties[sessionProperty]
-        }
-
-        return null
+        return this.sessionProperties[sessionProperty]
     }
 
     abstract setSessionLifetime(sessionLifetime: number): void
@@ -428,10 +405,10 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Sets a session property.
      *
-     * @param string sessionProperty
-     * @param mixed sessionValue
+     * @param string - sessionProperty
+     * @param mixed - sessionValue
      *
-     * @return void
+     * @returns void
      */
     setSessionProperty(sessionProperty: string, sessionValue: unknown): void {
         this.sessionProperties[sessionProperty] = sessionValue
@@ -440,12 +417,12 @@ export abstract class GenericRequestAdapter implements IRequestAdapter {
     /**
      * Sets a session property.
      *
-     * @param string sessionProperty
+     * @param string - sessionProperty
      *
-     * @return void
+     * @returns void
      */
     unsetSessionProperty(sessionProperty: string): void {
-        if (this.sessionProperties[sessionProperty] != null) {
+        if (sessionProperty in this.sessionProperties) {
             // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
             delete this.sessionProperties[sessionProperty]
         }

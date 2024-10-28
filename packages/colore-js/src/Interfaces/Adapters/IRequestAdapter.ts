@@ -1,13 +1,12 @@
-/**
- * @namespace Colore\Interfaces\Adapters
- */
-
-import { type ILogic, type ILogicSet } from '../Core/ILogic'
+import type { IAdapterContext } from '../Core/IAdapterContext.ts'
+import type { ILogic, ILogicSet } from '../Core/ILogic.js'
+import type { ILogicDone } from '../Core/ILogicDone.js'
+import type { ILogicError } from '../Core/ILogicError.js'
 
 export interface IRequestAdapter {
     getRequestContext: () => string
 
-    loadContext: (contextData: unknown) => void
+    loadContext: (contextData: IAdapterContext) => void
 
     hasException: () => boolean
 
@@ -19,7 +18,7 @@ export interface IRequestAdapter {
 
     getLogic: () => ILogicSet
 
-    getNextLogic: () => ILogic | false
+    getNextLogic: () => ILogic | ILogicDone | ILogicError
 
     hasLogic: () => boolean
 
@@ -34,90 +33,90 @@ export interface IRequestAdapter {
     /**
      * Get all render arguments.
      *
-     * @return mixed
+     * @returns mixed
      */
     getRenderArguments: () => Record<string, unknown>
 
     /**
      * Get a specific render argument.
      *
-     * @param string renderArgumentName
+     * @param string - renderArgumentName
      *
-     * @return mixed
+     * @returns mixed
      */
     getRenderArgument: (renderArgumentName: string) => unknown
 
     /**
      * Set a specific render argument.
      *
-     * @param string renderArgumentName
-     * @param mixed renderArgumentValue
+     * @param string - renderArgumentName
+     * @param mixed - renderArgumentValue
      *
-     * @return void
+     * @returns void
      */
     setRenderArgument: (renderArgumentName: string, renderArgumentValue: unknown) => void
 
     /**
      * Get all render properties.
      *
-     * @return mixed
+     * @returns mixed
      */
     getRenderProperties: () => Record<string, unknown>
 
     /**
      * Get a specific render property.
      *
-     * @param string renderProperty
+     * @param string - renderProperty
      *
-     * @return mixed
+     * @returns mixed
      */
     getRenderProperty: (renderProperty: string) => unknown
 
     /**
      * Set a specific render property.
      *
-     * @param string renderProperty
-     * @param mixed renderValue
+     * @param string - renderProperty
+     * @param mixed - renderValue
      *
-     * @return void
+     * @returns void
      */
     setRenderProperty: (renderProperty: string, renderValue: string) => void
 
     /**
      * Get the rendering engine for the current request.
      *
-     * @return string Returns a string with the currently set rendering engine.
+     * @returns string Returns a string with the currently set rendering engine.
      */
     getRenderEngine: () => string
 
     /**
      * Set the render engine for the current request.
      *
-     * @param string renderEngine
+     * @param string - renderEngine
      *
-     * @return void
+     * @returns void
      */
     setRenderEngine: (renderEngine: string) => void
 
     /**
      * Get the render path. This is the identifier for the template the renderer uses to render the request.
      *
-     * @return string
+     * @returns string
      */
     getRenderPath: () => string | false
 
     /**
      * Set render (template) path
      *
-     * @param [type] renderPath
-     * @return void
+     * @param string - renderPath
+     * @returns void
      */
     setRenderPath: (renderPath: string) => void
 
     /**
      * Output
      *
-     * @param mixed Output variable
+     * @param mixed - Output variable
      */
     output: (content: unknown, metadata: Record<string, string>, status: number) => void
 
@@ -134,35 +133,35 @@ export interface IRequestAdapter {
     /**
      * Returns an array containing all of the session properties.
      *
-     * @return array
+     * @returns array
      */
     getSessionProperties: () => Record<string, unknown>
 
     /**
      * Get a (named) session property. Returns null or the session property if it exists.
      *
-     * @param unknown sessionProperty
+     * @param unknown - sessionProperty
      *
-     * @return multitype:|NULL
+     * @returns multitype:|NULL
      */
     getSessionProperty: (sessionProperty: string) => unknown
 
     /**
      * Sets a session property.
      *
-     * @param string sessionProperty
-     * @param mixed sessionValue
+     * @param string - sessionProperty
+     * @param mixed - sessionValue
      *
-     * @return void
+     * @returns void
      */
     setSessionProperty: (sessionProperty: string, sessionValue: unknown) => void
 
     /**
      * Sets a session property.
      *
-     * @param string sessionProperty
+     * @param string - sessionProperty
      *
-     * @return void
+     * @returns void
      */
     unsetSessionProperty: (sessionProperty: string) => void
 

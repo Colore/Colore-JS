@@ -1,11 +1,16 @@
 import deepmerge from 'deepmerge'
-import { type IContext } from '../../Interfaces/Core/IContext'
-import { type IContextProvider } from '../../Interfaces/Providers/IContextProvider'
+import type { IContext } from '../../Interfaces/Core/IContext.js'
+import type { IContextProvider } from '../../Interfaces/Providers/IContextProvider.js'
 
 interface Config {
     contexts: Record<string, IContext>
 }
 
+/**
+ * Example simple context provider
+ *
+ * @public
+ */
 export class SimpleContextProvider implements IContextProvider {
     config: Config
 
@@ -22,7 +27,7 @@ export class SimpleContextProvider implements IContextProvider {
             .sort((a, b) => b.length - a.length)
             .find((context) => requestedContext.startsWith(context))
 
-        if (matchingContext == null || matchingContext === '' || this.config.contexts[matchingContext] == null) return this.config.contexts.error
+        if (matchingContext == null || matchingContext === '' || !(matchingContext in this.config.contexts)) return this.config.contexts.error
 
         return deepmerge({}, this.config.contexts[matchingContext])
     }

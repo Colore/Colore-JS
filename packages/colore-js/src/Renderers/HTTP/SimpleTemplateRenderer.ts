@@ -1,8 +1,8 @@
-import ejs from 'ejs'
+import { renderFile } from 'ejs'
 import path from 'node:path'
-import { type IRequestAdapter } from '../../Interfaces/Adapters/IRequestAdapter'
-import { type IRenderProvider } from '../../Interfaces/Providers/IRenderProvider'
-import { Logger } from '../../Logger'
+import { Logger } from '../../Logger.js'
+import type { IRequestAdapter } from '../../Interfaces/Adapters/IRequestAdapter.js'
+import type { IRenderProvider } from '../../Interfaces/Providers/IRenderProvider.js'
 
 export class SimpleTemplateRenderer implements IRenderProvider {
     dispatch(cro: IRequestAdapter): void {
@@ -27,7 +27,7 @@ export class SimpleTemplateRenderer implements IRenderProvider {
 
         template.context = cro.getRequestContext()
 
-        ejs.renderFile(templateFile, { template }, (err, output) => {
+        renderFile(templateFile, { template }, (err, output) => {
             if (err != null) throw err
 
             const httpHeaders: Record<string, string> = cro.getRenderArgument('httpHeaders') != null ? (cro.getRenderArgument('httpHeaders') as Record<string, string>) : {}

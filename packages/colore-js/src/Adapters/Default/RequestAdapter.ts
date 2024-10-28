@@ -1,9 +1,14 @@
-import { type IncomingMessage, type ServerResponse } from 'node:http'
-import { GenericRequestAdapter } from '../../GenericRequestAdapter'
-import { type IRequestAdapter } from '../../Interfaces/Adapters/IRequestAdapter'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 
 import { parse } from 'node:querystring'
+import { GenericRequestAdapter } from '../../GenericRequestAdapter.js'
+import type { IRequestAdapter } from '../../Interfaces/Adapters/IRequestAdapter.js'
 
+/**
+ * Default RequestAdapter for the NodeJS HTTP server API
+ *
+ * @public
+ */
 export class RequestAdapter extends GenericRequestAdapter implements IRequestAdapter {
     protected request_properties: Record<string, unknown> = {}
     protected request: IncomingMessage
@@ -16,7 +21,7 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
         this.response = response
 
         if (typeof this.request.url === 'string' && this.request.url.includes('?')) {
-            this.requestArguments = parse(this.request.url?.substring(this.request.url?.indexOf('?') + 1))
+            this.requestArguments = parse(this.request.url.substring(this.request.url.indexOf('?') + 1))
         }
 
         if (this.request.method === 'POST') {
@@ -25,14 +30,14 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
     }
 
     protected catchContent(): void {
-        let requestBody: string = ''
+        let requestBody = ''
 
         this.request.on('data', (chunk) => {
             requestBody += chunk
         })
         this.request.on('end', () => {
             if (this.request.headers['content-type'] === 'application/json') {
-                this.requestProperties = JSON.parse(requestBody)
+                this.requestProperties = JSON.parse(requestBody) as Record<string, unknown>
             } else {
                 this.requestProperties = parse(requestBody)
             }
@@ -47,7 +52,8 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
 
     /**
      * Returns an array containing all of the request arguments.
-     * @return array
+     *
+     * @returns array
      */
     getRequestArguments(): Record<string, unknown> {
         return this.requestArguments
@@ -56,29 +62,23 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
     /**
      * Get a specific request argument. Returns null if the specified request argument does not exist.
      *
-     * @param string requestArgumentName
+     * @param string - requestArgumentName
      *
-     * @return (array|string)[]|null|string
-     *
-     * @psalm-return array<int|string, array<int|string, mixed>|string>|null|string
+     * @returns Request argument
      */
     getRequestArgument(requestArgumentName: string): unknown {
-        if (this.requestArguments[requestArgumentName] != null) {
-            return this.requestArguments[requestArgumentName]
-        }
-
-        return null
+        return requestArgumentName in this.requestArguments ? this.requestArguments[requestArgumentName] : null
     }
 
     /**
      * Sets a request argument.
      *
-     * @param string requestArgument
-     * @param mixed requestArgumentValue
+     * @param string - requestArgument
+     * @param mixed - requestArgumentValue
      *
-     * @return void
+     * @returns void
      */
-    setRequestArgument(requestArgument: string, requestArgumentValue: unknown): void {
+    setRequestArgument(_requestArgument: string, _requestArgumentValue: unknown): void {
         /**
          * We don't want to inject data into the this.requestArguments variable.
          */
@@ -86,7 +86,7 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
 
     /**
      * Returns an array containing all of the request properties.
-     * @return array
+     * @returns array
      */
     getRequestProperties(): Record<string, unknown> {
         return this.requestProperties
@@ -95,11 +95,11 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
     /**
      * Get a specific request property. Returns null if the specified request property does not exist.
      *
-     * @param string requestProperty
+     * @param string - requestProperty
      *
-     * @return (array|string)[]|null|string
+     * @returns (array|string)[]|null|string
      *
-     * @psalm-return array<int|string, array<int|string, mixed>|string>|null|string
+     * @returns Request property
      */
     getRequestProperty(requestProperty: string): unknown {
         if (this.requestProperties[requestProperty] != null) {
@@ -112,12 +112,12 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
     /**
      * Sets a request property.
      *
-     * @param string requestProperty
-     * @param mixed requestValue
+     * @param string - requestProperty
+     * @param mixed - requestValue
      *
-     * @return void
+     * @returns void
      */
-    setRequestProperty(requestProperty: string, requestValue: unknown): void {
+    setRequestProperty(_requestProperty: string, _requestValue: unknown): void {
         /**
          * We don't want to inject data into the this.requestProperties variable.
          */
@@ -126,9 +126,7 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
     /**
      * Returns an array containing all of the session properties.
      *
-     * @return array
-     *
-     * @psalm-return array<string, mixed>
+     * @returns Session properties object
      */
     getSessionProperties(): Record<string, unknown> {
         return this.sessionProperties
@@ -137,7 +135,7 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
     /**
      * Sets a session lifetime.
      *
-     * @param integer sessionLifetime
+     * @param integer - sessionLifetime
      */
     setSessionLifetime(_sessionLifetime = 1800): void {
         // TODO cookie management
@@ -145,8 +143,8 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
 
     /**
      * Get a (named) session property. Returns null or the session property if it exists.
-     * @param unknown sessionProperty
-     * @return multitype:|NULL
+     * @param unknown - sessionProperty
+     * @returns multitype:|NULL
      */
     getSessionProperty(sessionProperty: string): unknown {
         if (this.sessionProperties[sessionProperty] != null) {
@@ -159,10 +157,10 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
     /**
      * Sets a session property.
      *
-     * @param string sessionProperty
-     * @param mixed sessionValue
+     * @param string - sessionProperty
+     * @param mixed - sessionValue
      *
-     * @return void
+     * @returns void
      */
     setSessionProperty(sessionProperty: string, sessionValue: unknown): void {
         this.sessionProperties[sessionProperty] = sessionValue
@@ -171,9 +169,9 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
     /**
      * Sets a session property.
      *
-     * @param string sessionProperty
+     * @param string - sessionProperty
      *
-     * @return void
+     * @returns void
      */
     unsetSessionProperty(sessionProperty: string): void {
         if (this.sessionProperties[sessionProperty] != null) {
@@ -185,9 +183,9 @@ export class RequestAdapter extends GenericRequestAdapter implements IRequestAda
     /**
      * Output
      *
-     * @param mixed Output variable
+     * @param mixed - Output variable
      *
-     * @return void
+     * @returns void
      */
     output(content: unknown, metadata: Record<string, string> = {}, status = 200): void {
         this.response.statusCode = status

@@ -1,8 +1,4 @@
-/**
- * @namespace Colore\Interfaces\Providers
- */
-
-import { type IContext } from '../Core/IContext'
+import type { IContext } from '../Core/IContext.js'
 
 export interface IContextProvider {
     resolveContext: (contextKey: string | Record<string, unknown>) => IContext

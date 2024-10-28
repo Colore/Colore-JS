@@ -1,17 +1,62 @@
+// eslint-disable-next-line import/no-named-as-default
 import sprintf from 'sprintf'
 
-/* eslint-disable @typescript-eslint/no-extraneous-class */
+/**
+ * @public
+ */
 export const LOG_EMERG = 0
+
+/**
+ * @public
+ */
 export const LOG_ALERT = 1
+
+/**
+ * @public
+ */
 export const LOG_CRIT = 2
+
+/**
+ * @public
+ */
 export const LOG_ERR = 3
+
+/**
+ * @public
+ */
 export const LOG_WARNING = 4
+
+/**
+ * @public
+ */
 export const LOG_NOTICE = 5
+
+/**
+ * @public
+ */
 export const LOG_INFO = 6
+
+/**
+ * @public
+ */
 export const LOG_DEBUG = 7
+
+/**
+ * @public
+ */
 export const LOG_TRACE = 8
+
+/**
+ * @public
+ */
 export const LOG_VERBOSE = 9
 
+/**
+ * Colore Logger
+ *
+ * @public
+ */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Logger {
     protected static basePath = ''
     protected static logLevel = LOG_NOTICE
@@ -100,5 +145,3 @@ export class Logger {
         process.exit(255)
     }
 }
-
-export default Logger
