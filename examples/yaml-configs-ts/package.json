@@ -1,0 +1,40 @@
+{
+    "author": "Ty Eggen",
+    "dependencies": {
+        "@colore/colore-js": "workspace:*"
+    },
+    "description": "",
+    "devDependencies": {
+        "@tyisi/config-eslint": "^1.0.0",
+        "@tyisi/config-prettier": "^1.0.0",
+        "deepmerge": "^4.3.1",
+        "eslint": "^9.13.0",
+        "prettier": "^3.3.3",
+        "tsx": "^4.19.1",
+        "typescript": "^5.2.2",
+        "yaml": "^2.6.0"
+    },
+    "keywords": [],
+    "license": "ISC",
+    "main": "colore.ts",
+    "name": "@colore/example-yaml-configs-ts",
+    "private": true,
+    "scripts": {
+        "commit": "pnpm dlx git-cz@latest --scope=examples",
+        "example": "wireit",
+        "type-check": "wireit"
+    },
+    "type": "module",
+    "version": "1.0.0",
+    "wireit": {
+        "type-check": {
+            "command": "tsc --noEmit"
+        },
+        "example": {
+            "dependencies": [
+                "type-check"
+            ],
+            "command": "tsx colore.ts"
+        }
+    }
+}

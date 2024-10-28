@@ -1,0 +1,20 @@
+{
+    "defaults": {
+        "contexts": {
+            "default": "default",
+            "error": "error"
+        },
+        "render": {
+            "properties": {}
+        }
+    },
+    "helpers": {
+        "context": {
+            "name": "Colore.Examples.YamlConfigsTS.YamlContextProvider",
+            "args": {
+                "configFile": "./configs/contexts.yml"
+            }
+        },
+        "request": "Colore.Adapters.Default.RequestAdapter"
+    }
+}
