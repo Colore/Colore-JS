@@ -1,4 +1,4 @@
 {
     "extends": "../../tsconfig.node.json",
-    "include": ["./dist/**/*.ts"]
+    "include": ["./dist/**/*.ts", "dist/*.d.ts", "dist/*.d.cts", "dist/*.d.mts", "dist/esm/index.d.mts"]
 }
