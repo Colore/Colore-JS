@@ -6,11 +6,14 @@
 !src/**/
 !src/**/*
 
+!tools/
+!tools/*.sh
+
 !package.json
 
 !.eslintrc.yml
 !tsconfig.json
-!tsconfig.node.json
+!tsconfig.*.json
 !tsup.config.ts
 
 !README.md
