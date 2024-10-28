@@ -1,4 +1,4 @@
-import { type IRequestAdapter } from '@colore/colore-js/src/Interfaces'
+import type { IRequestAdapter } from '@colore/colore-js'
 
 /**
  * The Ping class is an example class for remoting.

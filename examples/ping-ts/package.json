@@ -5,6 +5,10 @@
     },
     "description": "",
     "devDependencies": {
+        "@tyisi/config-eslint": "^1.0.0",
+        "@tyisi/config-prettier": "^1.0.0",
+        "eslint": "^9.13.0",
+        "prettier": "^3.3.3",
         "tsx": "^4.19.1"
     },
     "keywords": [],
@@ -13,8 +17,21 @@
     "name": "@colore/example-ping-ts",
     "private": true,
     "scripts": {
-        "example": "tsx colore.ts"
+        "commit": "pnpm dlx git-cz@latest --scope=examples",
+        "example": "wireit",
+        "type-check": "wireit"
     },
     "type": "module",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "wireit": {
+        "type-check": {
+            "command": "tsc --noEmit"
+        },
+        "example": {
+            "dependencies": [
+                "type-check"
+            ],
+            "command": "tsx colore.ts"
+        }
+    }
 }
