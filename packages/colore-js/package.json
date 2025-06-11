@@ -24,7 +24,7 @@
         "prettier": "^3.3.3",
         "ts-auto-guard": "^4.1.4",
         "ts-node": "^10.9.1",
-        "tsup": "^8.3.0",
+        "tsup": "^8.3.5",
         "typescript": "^5.2.2",
         "wireit": "^0.14.9"
     },
