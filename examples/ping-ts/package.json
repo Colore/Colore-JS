@@ -7,7 +7,7 @@
     "devDependencies": {
         "@tyisi/config-eslint": "^1.0.0",
         "@tyisi/config-prettier": "^1.0.0",
-        "eslint": "^9.13.0",
+        "eslint": "^9.26.0",
         "prettier": "^3.3.3",
         "tsx": "^4.19.1"
     },
