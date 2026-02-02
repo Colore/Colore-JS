@@ -18,7 +18,7 @@
         "@types/node": "^20.8.9",
         "@types/sprintf": "^0.1.1",
         "@types/uuid": "^9.0.6",
-        "eslint": "^9.13.0",
+        "eslint": "^9.26.0",
         "eslint-plugin-tsdoc": "^0.3.0",
         "git-cz": "^4.9.0",
         "prettier": "^3.3.3",

@@ -11,7 +11,7 @@
         "@types/sprintf": "^0.1.1",
         "@types/uuid": "^9.0.6",
         "ejs": "^3.1.10",
-        "eslint": "^9.13.0",
+        "eslint": "^9.26.0",
         "eslint-import-resolver-typescript": "^3.6.3",
         "git-cz": "^4.9.0",
         "prettier": "^3.3.3",
