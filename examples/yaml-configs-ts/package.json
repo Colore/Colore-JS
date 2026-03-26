@@ -12,7 +12,7 @@
         "prettier": "^3.3.3",
         "tsx": "^4.19.1",
         "typescript": "^5.2.2",
-        "yaml": "^2.6.0"
+        "yaml": "^2.8.3"
     },
     "keywords": [],
     "license": "ISC",
